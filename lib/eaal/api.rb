@@ -47,7 +47,8 @@ class EAAL::API
         :vcode => self.vcode}))
       req = Net::HTTP::Get.new(req_path)
       req[EAAL.version_string]
-      res = Net::HTTP.new(source.host, source.port).start {|http| http.request(req) } #one request for now
+      http = open_connection(source)
+      res = http.request(req) #one request for now
       case res
       when Net::HTTPOK
       when Net::HTTPNotFound
@@ -64,6 +65,33 @@ class EAAL::API
     else 
       result = nil
     end
+  end
+
+  def open_connection(uri)
+    http = Net::HTTP.new(uri.host, uri.port)
+    if uri.scheme == 'https'
+      http.use_ssl = true
+      certs = EAAL.ssl_certs
+      if certs && File.exists?(certs)
+        if File.file?(certs)
+          http.ca_file = certs
+        else
+          http.ca_path = certs
+        end
+
+        http.verify_mode = OpenSSL::SSL::VERIFY_PEER
+        http.verify_depth = 5
+      else
+        logger.warn("No valid certificates found, will not verify vault cert")
+        http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+      end
+    end
+
+    http
+  end
+
+  def logger
+    EAAL.logger
   end
 
   # Turns a hash into ?var=baz&bam=boo

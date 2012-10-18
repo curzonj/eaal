@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    eaal (0.1.10.20121018072048)
+    eaal (0.1.10.20121018072129)
       activesupport (>= 2.0.2)
       hpricot (>= 0.6)
       memcache-client (>= 1.7.1)
