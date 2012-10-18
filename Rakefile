@@ -1,6 +1,8 @@
 %w[hoe rubygems rake rake/clean fileutils newgem rubigen].each { |f| require f }
 require File.dirname(__FILE__) + '/lib/eaal.rb'
 
+Hoe.plugin :gemspec
+
 # Generate all the Rake tasks
 # Run 'rake -T' to see list of generated tasks (from gem root directory)
 $hoe = Hoe.spec 'eaal' do |p|
