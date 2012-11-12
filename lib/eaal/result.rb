@@ -124,7 +124,7 @@ module EAAL
             result.request_time = (xml/"eveapi/currentTime").first.inner_html
             result.cached_until = (xml/"eveapi/cachedUntil").first.inner_html
             values.each { |key,value|
-                result.send(key + "=", value)
+                result.send(key + "=", value) if result.respond_to?(key + '=')
             }
             result
         end
